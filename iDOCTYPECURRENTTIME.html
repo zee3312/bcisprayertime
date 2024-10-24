@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prayer Times</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5dc; /* Light cream background */
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .container {
+      margin: 50px auto;
+      max-width: 1200px;
+    }
+    h1 {
+      font-size: 60px;
+      color: navy;
+      margin-bottom: 5px;
+    }
+    .date, .time {
+      font-size: 30px; /* Smaller font for the date and time */
+      color: #003366;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 20px;
+      font-size: 60px; /* Same font size as header for prayer times */
+      font-weight: bold;
+      color: #003366;
+      border: 2px solid #003366;
+      text-align: center;
+    }
+    th {
+      background-color: #003366;
+      color: white;
+      font-weight: bold;
+    }
+    td {
+      background-color: #f0f8ff; /* Light blue row background */
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Prayer Times</h1>
+  <div class="date">Date: <span id="current-date">Loading...</span></div>
+  <div class="time">Current Time: <span id="current-time">Loading...</span></div>
+  <table>
+    <thead>
+            <tr>
+        <th colspan="3">Bay County Islamic Society</th>
+      </tr>
+      <tr>
+        <th>Prayer</th>
+        <th>Time</th>
+        <th>Iqamah</th>
+      </tr>
+    </thead>
+    <tbody id="prayer-times">
+      <tr>
+        <td>Fajr</td>
+        <td id="fajr-time">Loading...</td>
+        <td id="fajr-iqamah">Loading...</td>
+      </tr>
+      <tr>
+        <td>Zuhr</td>
+        <td id="zuhr-time">Loading...</td>
+        <td id="zuhr-iqamah">Loading...</td>
+      </tr>
+      <tr>
+        <td>Asr</td>
+        <td id="asr-time">Loading...</td>
+        <td id="asr-iqamah">Loading...</td>
+      </tr>
+      <tr>
+        <td>Maghrib</td>
+        <td id="maghrib-time">Loading...</td>
+        <td id="maghrib-iqamah">Loading...</td>
+      </tr>
+      <tr>
+        <td>Isha</td>
+        <td id="isha-time">Loading...</td>
+        <td id="isha-iqamah">Loading...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // Fetch and display prayer times
+  async function fetchPrayerTimes() {
+    const response = await fetch('https://masjidal.com/api/v1/time/range?masjid_id=PAPyordJ');
+    const data = await response.json();
+    const salah = data.data.salah[0];
+    const iqamah = data.data.iqamah[0];
+
+    document.getElementById('current-date').textContent = salah.date; // Set current date
+    document.getElementById('fajr-time').textContent = salah.fajr;
+    document.getElementById('fajr-iqamah').textContent = iqamah.fajr;
+    document.getElementById('zuhr-time').textContent = salah.zuhr;
+    document.getElementById('zuhr-iqamah').textContent = iqamah.zuhr;
+    document.getElementById('asr-time').textContent = salah.asr;
+    document.getElementById('asr-iqamah').textContent = iqamah.asr;
+    document.getElementById('maghrib-time').textContent = salah.maghrib;
+    document.getElementById('maghrib-iqamah').textContent = iqamah.maghrib;
+    document.getElementById('isha-time').textContent = salah.isha;
+    document.getElementById('isha-iqamah').textContent = iqamah.isha;
+  }
+
+  // Display current time
+  function displayCurrentTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    document.getElementById('current-time').textContent = timeString;
+  }
+
+  // Refresh prayer times daily
+  setInterval(fetchPrayerTimes, 24 * 60 * 60 * 1000);
+  fetchPrayerTimes();
+
+  // Update current time every second
+  setInterval(displayCurrentTime, 1000);
+</script>
+
+</body>
+</html>
+<style>
+  .logo {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 150px; /* Adjust the size as needed */
+  }
+</style>
+<img src="bcisprayertime/logo.png" alt="Logo" class="logo">
